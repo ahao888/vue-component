@@ -92,7 +92,7 @@ export default {
             }
         },
         handleInput(val, e) {
-            let value = parseInt(e.target.value.replace(/\D+/g, ''))
+            let value = e.target.value.replace(/\D+/g, '')
             this[val] = value
             this.$emit('update',value)
         }
