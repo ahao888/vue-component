@@ -24,7 +24,13 @@
     transition: border-color .2s cubic-bezier(.645,.045,.355,1);
     width: 100%;
 }
-
+.errorMsg{
+    color: #f56c6c;
+    font-size: 12px;
+    line-height: 1;
+    padding-top: 2px;
+    padding-bottom: 15px;
+}
 </style>
 <template>
     <div id="numberInput">
@@ -36,10 +42,21 @@
             @blur="handleBlur"
             :class="validate"
             >
+        <div v-if="isError"
+             class="errorMsg">
+             {{ errorMsg }}
+        </div>
     </div>
 </template>
 <script>
 export default {
+    data() {
+        return {
+            inputVal: this.defaultNumber,
+            status: 1,
+            isError: false,
+        }
+    },
     computed:{
         validate() {
             if (this.status === 1) {
@@ -51,23 +68,31 @@ export default {
             }
         }
     },
-    data() {
-        return {
-            inputVal: this.inputNumber,
-            status: 1, 
+    props:{
+        defaultNumber:{
+            default:'',
+        },
+        isValidate: {
+            default: true,
+        },
+        errorMsg: {
+            default: '请输入内容'
         }
     },
-    props:['defaultNumber'],
     methods:{
         handleBlur() {
-            if (this.inputVal == '') {
-                this.status = 2
-            } else {
-                this.status = 3
+            if (this.isValidate) {
+                if (this.inputVal == '') {
+                    this.status = 2
+                    this.isError = true
+                } else {
+                    this.status = 3
+                    this.isError = false
+                }
             }
         },
         handleInput(val, e) {
-            let value = e.target.value.replace(/\D+/g, '')
+            let value = parseInt(e.target.value.replace(/\D+/g, ''))
             this[val] = value
             this.$emit('update',value)
         }
