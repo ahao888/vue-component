@@ -5,6 +5,7 @@
           @update="pureNumber = $event"
           :isValidate="true"
           errorMsg='这是错误提示语'
+          :int="true"
           >
           </number-input>  
     </div>

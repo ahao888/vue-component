@@ -77,7 +77,10 @@ export default {
         },
         errorMsg: {
             default: '请输入内容'
-        }
+        },
+        int: {
+            default: true
+        },
     },
     methods:{
         handleBlur() {
@@ -92,9 +95,17 @@ export default {
             }
         },
         handleInput(val, e) {
-            let value = e.target.value.replace(/\D+/g, '')
-            this[val] = value
-            this.$emit('update',value)
+            if (this.int) {
+                let value = e.target.value.replace(/\D+/, '')
+                this[val] = value
+            } else {
+                let matchArr = e.target.value.match(/\d+\.?\d*/)
+                if (!matchArr) {
+                    this[val] = ''
+                }
+                this[val] = matchArr[0]
+            }
+            this.$emit('update',this[val])
         }
     }
 }
