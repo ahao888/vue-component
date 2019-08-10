@@ -81,6 +81,16 @@ export default {
         int: {
             default: true
         },
+        // 支持正负 true：正 false:负 默认支持负数
+        pm: {
+          default: false,
+          type: Boolean
+        },
+        // 支持小数位
+        decimal: {
+          default: 2,
+          type: Number
+        },
     },
     methods:{
         handleBlur() {
@@ -96,14 +106,19 @@ export default {
         },
         handleInput(val, e) {
             if (this.int) {
-                let value = e.target.value.replace(/\D+/, '')
-                this[val] = value
+              let value = e.target.value.replace(/\D+/, '')
+              var match = e.target.value.match(/-/);
+              if (match) {
+                value = this.pm ? value:-value
+              }
+              this[val] = value
             } else {
-                let matchArr = e.target.value.match(/\d+\.?\d*/)
-                if (!matchArr) {
-                    this[val] = ''
-                }
-                this[val] = matchArr[0]
+              let reg = this.pm ? '\\d+\\.?\\d*' : '-?\\d+\\.?(\\d*)?'
+              let matchArr = e.target.value.match(reg)
+              if (!matchArr) {
+                this[val] = ''
+              }
+              this[val] = Number(matchArr[0]).toFixed(this.decimal)
             }
             this.$emit('update',this[val])
         }
